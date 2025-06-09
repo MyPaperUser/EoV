@@ -1,0 +1,279 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage[left=3cm,right=3cm,top=3cm, bottom=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{changepage}
+\usepackage[headsepline, footsepline]{scrlayer-scrpage}
+\usepackage{enumerate}
+\usepackage{dsfont}
+\usepackage[]{mathtools}
+\usepackage[]{mathbbol}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage[]{circuitikz}
+\usepackage{tcolorbox} % Für schöne Boxen
+\usetikzlibrary{circuits.logic.IEC}
+\usepackage{tikz}
+\usepackage{tkz-graph}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip} % Absätze mit Abstand statt Einrückung
+\usepackage{titlesec} % Für Absatzgestaltung
+
+
+\newcommand{\bpf}[1]{%
+	\par\vspace{0.8\baselineskip}% Abstand vor der Überschrift
+	\noindent\textbf{#1}% Fettgedruckte Überschrift
+	\par\vspace{0.3\baselineskip}% Abstand nach der Überschrift
+}
+
+
+
+\renewcommand{\contentsname}{Inhaltsverzeichnis}
+\renewcommand{\figurename}{Grafik}
+\renewcommand{\epsilon}{\varepsilon}
+
+\definecolor{darkgrey}{HTML}{232327}
+
+% Zählerdefinition mit AUTOMATISCHEM SUBSECTION-RESET
+\newcounter{commoncounter}[subsection]
+\renewcommand{\thecommoncounter}{\thesubsection.\arabic{commoncounter}}
+
+% Zähler direkt bei Dokumentstart initialisieren
+\AtBeginDocument{\setcounter{commoncounter}{0}}
+
+% BOX-DEFINITIONEN mit korrigierter Zählerlogik
+\newtcolorbox{definitionbox}[1][]{
+	before title={\refstepcounter{commoncounter}}, % KRITISCH: vor dem Titel!
+	title={Definition: #1},
+	colback=white,
+	colframe=white!75!darkgrey,
+	fonttitle=\bfseries,
+	boxrule=0.6mm,
+	coltitle=black,
+	rounded corners,
+	%width=\textwidth,
+	before skip=10pt,
+	after skip=10pt
+}
+
+\newtcolorbox{examplebox}[1][]{
+	before title={\refstepcounter{commoncounter}}, % KRITISCH: vor dem Titel!
+	title={Beispiel \thecommoncounter: #1},
+	colback=white,
+	colframe=white!75!orange,
+	fonttitle=\bfseries,
+	boxrule=0.6mm,
+	coltitle=black,
+	rounded corners,
+	width=\textwidth,
+	before skip=10pt,
+	after skip=10pt
+}
+
+\newtcolorbox{satzbox}[1][]{
+	before title={\refstepcounter{commoncounter}}, % KRITISCH: vor dem Titel!
+	title={Satz \thecommoncounter: #1},
+	colback=white,
+	colframe=white!75!blue,
+	fonttitle=\bfseries,
+	boxrule=0.6mm,
+	coltitle=black,
+	rounded corners,
+	width=\textwidth,
+	before skip=10pt,
+	after skip=10pt
+}
+
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codeblue}{rgb}{0,0,0.8}
+\definecolor{codered}{rgb}{0.8,0,0}
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\lstdefinestyle{CSharpStyle}{
+	language=Python,
+	basicstyle=\ttfamily\small, % Monospace-Schrift
+	keywordstyle=\color{blue}\bfseries, % Schlüsselwörter fett und blau
+	stringstyle=\color{red}, % Strings rot
+	commentstyle=\color{codegreen}, % Kommentare grün
+	backgroundcolor=\color{lightgray}, % Hintergrundfarbe
+	numbers=left, % Zeilennummern links
+	numbersep=10px, % Abstand zwischen Zeilennummern und Code
+	numberstyle=\color{gray}\texttt,
+	stepnumber=1, % Zeilennummerierung Schrittweite 1
+	frame=single, % Rahmen um den Code
+	tabsize=4, % Tabulatorgröße
+	breaklines=true, % Zeilenumbruch aktivieren
+	captionpos=none,
+	showstringspaces=false,
+	xleftmargin=15pt, % Linker Rand für den Code (verschiebt alles nach rechts)
+}
+
+
+
+% Umgebung für Listings mit Titel und Zähler
+\newenvironment{codeexample}[1][]{
+	\refstepcounter{commoncounter} % Zähler erhöhen
+	\lstset{
+		style=CSharpStyle,
+		caption={Listing \thecommoncounter: #1}, % Titel mit Zähler
+		label={listing:\thecommoncounter}
+	}
+}{}
+
+\tcbset{
+	note/.style={
+		colback=white,    % Hintergrundfarbe
+		colframe=white!50!orange, % Rahmenfarbe
+		fonttitle=\bfseries,    % Titel fettgedruckt
+		boxrule=0.6mm,          % Dicke des Rahmens
+		coltitle=black,         % Farbe des Titels
+		rounded corners,          % Ecken der Box
+		width=\textwidth,       % Breite der Box
+		before skip=10pt,       % Abstand vor der Box
+		after skip=10pt         % Abstand nach der Box
+	}
+}
+
+\tcbset{
+	third/.style={
+		colback=white,    % Hintergrundfarbe
+		colframe=white!50!red, % Rahmenfarbe
+		fonttitle=\bfseries,    % Titel fettgedruckt
+		boxrule=0.6mm,          % Dicke des Rahmens
+		coltitle=black,         % Farbe des Titels
+		rounded corners,          % Ecken der Box
+		width=\textwidth,       % Breite der Box
+		before skip=10pt,       % Abstand vor der Box
+		after skip=10pt         % Abstand nach der Box
+	}
+}
+%\setlength{\parindent}{0pt}
+\newcounter{abs}
+\newcommand{\absreset}{\setcounter{abs}{0}}
+\newcommand{\abs}{\stepcounter{abs}\noindent\textbf{Abs.~\arabic{abs}.} }
+
+\newcommand{\paragraphen}[2]{\section*{§~#1~#2}\addcontentsline{toc}{section}{§~#1~#2}\absreset }
+\newcommand{\absatz}[1]{\noindent\textbf{Abs.~#1.} }
+
+\title{Satzung zur Eingrenzung ordnungsgemäßer Verhaltensweisen}
+\author{MyPaperCampus}
+%\pagestyle{scrhadings}
+\date{21. Mai 2025}
+\begin{document}
+	\ihead{MyPapertown}
+	\chead{EoV}
+	\ohead{21. Mai 2025}
+	\ofoot{Seite {\pagemark} von \pageref{LastPage}}
+	\ifoot{\textcopyright2025 - MyPapertown}
+	
+	\maketitle
+	\tableofcontents
+	\newpage
+	
+	\paragraphen{1}{Geltungsbereich der Satzung}
+	\abs Die in dieser Satzung festgelegten Regularien gelten auf dem MyPaperCampus in der Zepernicker Straße 50, 16321 Bernau bei Berlin ab dem oben genannten Datum.
+	
+	\abs Die in dieser Satzung festgelegten Regularien gelten uneingeschränkt für jegliche Art von Gast, wobei Gast alleinig durch die Anwesenheit auf dem MyPaperCampus definiert ist. Dabei spielt die Beziehung zu Mitarbeitenden des Campus keine Rolle. 
+	
+	\abs Die in dieser Satzung festgelegten Regularien gelten nicht in allen Fällen für Anwohnende auf dem MyPaperCampus. Anwohnend ist derjenige, der mindestens zwei Nächste auf dem Grund verbringt und als ein solcher durch eine mündliche Absprache mit der Verwaltung definiert worden ist. Andernfalls gilt derjenige weiterhin als ein Gast und muss gemäß §1 Abs. 2 handeln.
+	
+	\abs Wird diese Satzung aktualisiert, so werden ehemals nach einer älteren Version der Satzung verfasste Urteile, Verträge und weitere Konventionen oder Dokumente auf die neue Satzung übertragen. 
+	
+	\paragraphen{2}{Zweck der Satzung}
+	\abs Die Satzung bezweckt die Eingrenzung der ordnungsgemäßen Verhaltensweisen auf dem MyPaperCampus und kann jederzeit durch die Verwaltung aufgehoben werden.
+	
+	\paragraphen{3}{Definition der Parteien}
+	\abs \textit{Verwaltung} ist diejenige Partei, die sich um die Verwaltung des MyPaperCampus kümmert und Ansprechpartner für jegliche Differenzen in Bezug zur Nutzung des MyPaperCampus. Verwaltungssitz ist die folgend angegebene Adresse.
+	\begin{itemize}[label=]
+		\item Oberster Verwaltungsrat\\
+		MyPaperCampus\\
+		Haus 1, Raum 1.01.1\\
+		Zepernicker Straße 50\\
+		16321 Bernau bei Berlin OT Schönow
+	\end{itemize}
+	
+	\abs Als \textit{anwesend} wird jede Person bezeichnet, die sich physisch oder geistig auf dem MyPaperCampus befindet.
+	
+	\paragraphen{4}{Anwesenheit}
+	\abs Im Allgemeinen ist die Anwesenheit auf dem MyPaperCampus entgeltfrei. 
+	
+	\abs Während einer privaten Veranstaltung können vor dem Einlass kenntlich gemachte Entgelte zum Betreten des Campuses erlassen werden.
+	
+	\abs Ist eine Veranstaltung als privat deklariert, so ist der Nachweis einer Einladung vom Veranstalter oder eine durch diesen beauftragten Person zum Betreten des Campuses gemäß §5 erforderlich. Andernfalls ist die Veranstaltung als öffentlich deklariert.
+	
+	\newpage
+	\paragraphen{5}{Einladungen}
+	\abs Eine Einladung hat die unten stehenden Bestandteile zu enthalten, damit sie als wirkungsvoll gilt.
+	\begin{enumerate}
+		\item Mindestens Name, Vorname und elektronische Kommunikationsadresse des Veranstaltenden
+		\item 8-stelliger zufallsgenerierter Prüfcode in Base64-Codierung
+		\item Aufklärung über die Beachtung dieser Satzung
+		\item Datum, Zeitpunkt und Ort der Veranstaltung
+		\item Mindestalter, sofern vorgeschrieben
+	\end{enumerate}
+	\abs Die persönliche Einladung kann für mehrere Personen gelten, wenn diese vollständig namentlich genannt und die Einladung an sie adressiert ist.
+	
+	\abs Einladungen sind für den Fall einer zufälligen, verdachtsunabhängigen Intensivkontrolle zur Veranstaltung mitzubringen.
+	
+	\abs Ist ein Mindestalter zum Besuch der Veranstaltung vorgeschrieben und hat die geladene Person zum Zeitpunkt der Veranstaltung das vorgeschriebene Mindestalter nicht erreicht, so ist die Einladung wirkungslos.
+	
+	\paragraphen{6}{Kleiderordnung}
+	\abs Die Kleiderordnung ist in die drei unterschiedliche Typen Typ 0 (formell), Typ 1 (semi-formell), Typ 2 (informell) aufgeteilt.
+	
+	\abs Ist keine Kleiderordnung genannt, so gilt die Kleiderordnung vom Typ 2.
+	
+	\abs Die jeweiligen Typen der Kleiderordnung sind abwärtskompatibel. Ist die Kleiderordnung vom Typ 1 gefordert, so kann auch Kleiderordnung Typ 0 angewandt werden, nicht jedoch Typ 2.
+	
+	\abs Die Typen der Kleiderordnung lassen sich wie folgt aufspalten:
+	\begin{adjustwidth}{1cm}{0cm}
+		\begin{enumerate}[label=Typ \arabic*:]
+			\item[Typ 0:] Die Trägerin bzw. der Träger dieses Modus unterwirft sich vollständig der staatsähnlich autoritativen Etikette ästhetischer Repräsentanz.
+			\item[Typ 1:] Die Trägerin bzw. der Träger agiert im Spannungsfeld zwischen Ästhetikpflicht und Bequemlichkeitsrecht. Kleidungselemente sind optisch normkonform, jedoch mit semantischen Flexionen der Lässigkeit versehen.
+			\item[Typ 2:] Anwendung der im Grundgesetz der Modefreiheit verankerten Textilautonomie. Der Träger unterliegt keiner äußeren Norm, sondern ausschließlich der inneren Maxime.
+		\end{enumerate}
+	\end{adjustwidth}
+	
+	\newpage
+	\paragraphen{7}{Nutzung der Kücheninserate}
+	\abs Es werden je nach Glastyp
+	\begin{enumerate}[label=\arabic*.]
+		\item maximal zwei Gläser, bei Gläsern vom Typ 24 und 34
+		\item maximal drei Gläser, bei Gläsern vom Typ 5
+		\item maximal ein Glas, bei Gläsern vom Typ 27
+		\item maximal zwei Gläser sonst
+	\end{enumerate}
+	übereinander gestapelt, sei es zum Transport oder der Lagerung.
+	
+	\abs Gläser mit Stiel, also Weingläser, Sektschalen, Cocktailschalen und weitere zutreffende, dürfen nicht gestapelt und nur einzeln transportiert werden.
+	
+	\abs Zu Tisch sind möglichst jeweils identische Utensilien für jedes einzelne Gedeck zu verwenden.
+	
+	\abs Für die Endreinigung der verwendeten Utensilien ist entweder der Koch bzw. die Köchin selbst oder eine durch ihn oder sie beauftragte Person verantwortlich.
+	
+	\paragraphen{8}{Institutsbeauftragte}
+	\abs Leitung des Zentrum für Informationsmanagament übernimmt Herr Elias Fierke.
+	
+	\abs Leitung des Instituts für Waldforschung und Baumverarbeitung übernimmt Herr Benjamin Fierke.
+	
+	\abs Leitung des Instituts für Gartenmechanik übernimmt Frau Gabriele Fierke.
+	
+	\abs Leitung des Instituts für künstlerische Einrichtungen und -werke übernimmt Herr Florian Fierke.
+	
+	\abs Leitung des Instituts für Begriffsforschung übernimmt Frau Gaby Werkstätter.\footnote{Das Institut für Begriffsforschung befindet sich außerhalb des Campus.}
+	
+	\abs Leitung des Instituts für mathematische Bildung übernimmt Herr Elias Fierke.
+	
+	\abs Leitung des Instituts für Handwerk übernimmt Herr Michael Fierke.
+	
+	\paragraphen{9}{Treffen von Entscheidungen}
+	\abs Was die Verwaltung sagt, das wird gemacht.
+	
+	\abs Leitungen von Instituten haben Entscheidungsrecht für Institutsinterne Entscheidungen.
+	\label{LastPage}
+\end{document}
